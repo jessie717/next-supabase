@@ -12,7 +12,6 @@ interface User {
   username: string
   email: string
 }
-
 export default function User() {
   const [users, setUsers] = useState<User[]>([])
   const [error, setError] = useState<null | string>(null)
@@ -20,13 +19,15 @@ export default function User() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/user') // 调用 API 路由
-        const data = (await response.json()) as Response<User[]>
+        const response = await fetch('/api/user')
+        const res = (await response.json()) as Response<User[]>
 
-        if (data.code === 200) {
-          setUsers(data.data)
+        console.log('res :>> ', res)
+
+        if (res.code === 200) {
+          setUsers(res.data)
         } else {
-          setError(data.message || 'Error fetching users')
+          setError(res.message || 'Error fetching users')
         }
       } catch (err) {
         console.log('err :>> ', err)
@@ -42,12 +43,11 @@ export default function User() {
 
   return (
     <div>
-      <h1>Page root</h1>
+      <h1>Page User</h1>
+      <h2>User List</h2>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>
-            {user.id}-{user.username}-{user.email}
-          </li>
+          <li key={user.id}>{user.id}: {user.username}-{user.email}</li>
         ))}
       </ul>
     </div>
